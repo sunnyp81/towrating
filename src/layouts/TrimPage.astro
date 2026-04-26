@@ -1,0 +1,103 @@
+---
+import Base from './Base.astro';
+import BreadcrumbList from '../components/BreadcrumbList.astro';
+import QuickAnswerBox from '../components/QuickAnswerBox.astro';
+import TrimComparisonTable from '../components/TrimComparisonTable.astro';
+import FAQSection from '../components/FAQSection.astro';
+import AffiliateBox from '../components/AffiliateBox.astro';
+import CompareWith from '../components/CompareWith.astro';
+import { answerOpener, whatCanItTow, commonMistakes, faqsForTrim } from '../lib/prose.ts';
+import { vehicleSchema, productSchema, breadcrumbList, faqPage, itemListFromTrims } from '../lib/schema.ts';
+import { buildSpokeLinks } from '../lib/internal-links.ts';
+import { assignBracket, formatLbs } from '../lib/capacity-utils.ts';
+import { carGurusUrl, amazonHitchUrl, amazonBrakeControllerUrl } from '../lib/affiliate.ts';
+import type { Model, Year, Trim } from '../lib/types.ts';
+
+interface Props {
+  model: Model; year: Year; trim: Trim;
+  siblingMakeClass: string[]; alternates: Array<{ makeSlug: string; modelSlug: string; year: number; label: string; maxTowLbs: number }>;
+  prevYear: number | null; nextYear: number | null;
+}
+const { model, year, trim, siblingMakeClass, alternates, prevYear, nextYear } = Astro.props;
+const fullName = `${year.year} ${model.makeLabel} ${model.modelLabel} ${trim.trimLabel}`;
+const title = `${fullName} Towing Capacity: ${formatLbs(trim.specs.maxTowLbs)} (Verified Specs)`;
+const description = `${fullName} max towing capacity ${formatLbs(trim.specs.maxTowLbs)}, payload ${formatLbs(trim.specs.payloadLbs)}, GCWR ${formatLbs(trim.specs.gcwrLbs)}, tongue weight ${formatLbs(trim.specs.tongueWeightLbs)}, hitch class ${trim.specs.hitchClass ?? 'N/A'}.`;
+const bracket = assignBracket(trim.specs.maxTowLbs ?? 0);
+const opener = answerOpener(model, year, trim);
+const towables = whatCanItTow(trim.specs.maxTowLbs);
+const mistakes = commonMistakes(model.vehicleClass);
+const faqCount = trim.source === 'hero-curated' ? 10 : 6;
+const faqs = faqsForTrim(model, year, trim, faqCount);
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: model.makeLabel, href: `/${model.makeSlug}/` },
+  { name: model.modelLabel, href: `/${model.makeSlug}/${model.modelSlug}/` },
+  { name: String(year.year), href: `/${model.makeSlug}/${model.modelSlug}/${year.year}/` },
+  { name: trim.trimLabel, href: `/${model.makeSlug}/${model.modelSlug}/${year.year}/${trim.trimSlug}/` },
+];
+const dealerUrl = carGurusUrl(year.year, model.makeLabel, model.modelLabel);
+const jsonLd = [
+  vehicleSchema(model, year, trim),
+  productSchema(model, year, trim, dealerUrl),
+  breadcrumbList(crumbs),
+  faqPage(faqs),
+  itemListFromTrims(year.trims, year.year, model.makeSlug, model.modelSlug),
+];
+const links = buildSpokeLinks({
+  makeSlug: model.makeSlug, modelSlug: model.modelSlug, year: year.year, trimSlug: trim.trimSlug,
+  maxTowLbs: trim.specs.maxTowLbs ?? 0, vehicleClass: model.vehicleClass,
+  siblings: {
+    sameYearTrims: year.trims.filter(t => t.trimSlug !== trim.trimSlug).map(t => t.trimSlug),
+    prevYear, nextYear, sameMakeClass: siblingMakeClass,
+  },
+  bracketLbs: bracket?.lbs ?? 10000,
+  contextualGuide: trim.specs.maxTowLbs && trim.specs.maxTowLbs > 7500 ? 'gcwr-explained' : 'tongue-weight-10-percent-rule',
+});
+---
+<Base title={title} description={description} noindex={!trim.indexable} jsonLd={jsonLd}>
+  <article class="max-w-4xl mx-auto px-4 py-8">
+    <BreadcrumbList items={crumbs} />
+    <h1 class="font-display text-4xl font-bold text-brand-900 mb-4">{title}</h1>
+    <p class="text-lg text-slate-700 leading-relaxed mb-6">{opener}</p>
+    <QuickAnswerBox specs={trim.specs} />
+
+    <AffiliateBox title={`Find this ${fullName} nearby`} description="Compare local listings, dealer prices, and inventory." href={dealerUrl} ctaLabel="Search local inventory" />
+
+    <TrimComparisonTable trims={year.trims} highlightSlug={trim.trimSlug} makeSlug={model.makeSlug} modelSlug={model.modelSlug} year={year.year} />
+
+    {towables.length > 0 && (
+      <section class="my-8">
+        <h2 class="font-display text-2xl font-semibold mb-3">What can the {fullName} tow?</h2>
+        <p class="text-slate-700 mb-3">With its {formatLbs(trim.specs.maxTowLbs)} max tow rating, the {fullName} can pull these typical trailer types when properly equipped:</p>
+        <ul class="list-disc pl-6 space-y-1 text-slate-700">{towables.map(t => <li>{t}</li>)}</ul>
+      </section>
+    )}
+
+    <section class="my-8">
+      <h2 class="font-display text-2xl font-semibold mb-3">Required equipment</h2>
+      <p class="text-slate-700 mb-3">For maximum capacity towing on the {fullName} you need: a Class {trim.specs.hitchClass ?? 'III/IV'} receiver hitch, a proportional brake controller (legally required on trailers over 3,000 lbs in most US states), trailer wiring harness, and — for trailers above 5,000 lbs — a weight-distribution hitch.</p>
+      <AffiliateBox title={`Class ${trim.specs.hitchClass ?? 'IV'} hitches for the ${model.makeLabel} ${model.modelLabel}`} description="Receiver hitches rated for this trim's max tow capacity." href={amazonHitchUrl(trim.specs.hitchClass)} ctaLabel="Browse hitches on Amazon" />
+      <AffiliateBox title="Trailer brake controllers" description="Proportional integrated brake controllers compatible with most US pickups and SUVs." href={amazonBrakeControllerUrl()} ctaLabel="Browse brake controllers" />
+    </section>
+
+    <section class="my-8">
+      <h2 class="font-display text-2xl font-semibold mb-3">5 common towing mistakes with the {model.makeLabel} {model.modelLabel}</h2>
+      <ol class="list-decimal pl-6 space-y-2 text-slate-700">{mistakes.map(m => <li>{m}</li>)}</ol>
+    </section>
+
+    <CompareWith alternates={alternates} />
+
+    <FAQSection qas={faqs} />
+
+    <section class="my-8 rounded-lg bg-slate-50 p-5">
+      <h2 class="font-display text-lg font-semibold mb-2">Related</h2>
+      <ul class="grid sm:grid-cols-2 gap-2 text-sm">
+        {links.map(l => <li><a href={l.href} class="text-brand-700 hover:text-accent-600 hover:underline">{l.label}</a></li>)}
+      </ul>
+    </section>
+
+    {trim.sourceUrl && (
+      <p class="text-xs text-slate-500 mt-8">Specs sourced from <a href={trim.sourceUrl} rel="noopener" target="_blank" class="underline">{trim.sourceUrl}</a> and verified against manufacturer documentation.</p>
+    )}
+  </article>
+</Base>
