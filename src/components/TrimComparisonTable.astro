@@ -1,0 +1,35 @@
+---
+import { formatLbs } from '../lib/capacity-utils.ts';
+import type { Trim } from '../lib/types.ts';
+interface Props { trims: Trim[]; highlightSlug?: string; makeSlug: string; modelSlug: string; year: number; }
+const { trims, highlightSlug, makeSlug, modelSlug, year } = Astro.props;
+---
+<section class="my-8">
+  <h2 class="font-display text-2xl font-semibold mb-4">All {year} trims compared</h2>
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm border-collapse">
+      <thead>
+        <tr class="bg-slate-100 text-left">
+          <th class="p-3 font-semibold">Trim</th>
+          <th class="p-3 font-semibold">Max Tow</th>
+          <th class="p-3 font-semibold">Payload</th>
+          <th class="p-3 font-semibold">GCWR</th>
+          <th class="p-3 font-semibold">Tongue</th>
+          <th class="p-3 font-semibold">Hitch</th>
+        </tr>
+      </thead>
+      <tbody>
+        {trims.map(t => (
+          <tr class={t.trimSlug === highlightSlug ? 'bg-accent-500/10 font-semibold' : 'border-t border-slate-200'}>
+            <td class="p-3"><a class="text-brand-700 hover:underline" href={`/${makeSlug}/${modelSlug}/${year}/${t.trimSlug}/`}>{t.trimLabel}</a></td>
+            <td class="p-3">{formatLbs(t.specs.maxTowLbs)}</td>
+            <td class="p-3">{formatLbs(t.specs.payloadLbs)}</td>
+            <td class="p-3">{formatLbs(t.specs.gcwrLbs)}</td>
+            <td class="p-3">{formatLbs(t.specs.tongueWeightLbs)}</td>
+            <td class="p-3">{t.specs.hitchClass ?? '—'}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</section>
