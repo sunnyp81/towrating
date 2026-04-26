@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.astro/
+.env
+.env.local
+data/*.json
+!src/data/hero-models.json
+.DS_Store
