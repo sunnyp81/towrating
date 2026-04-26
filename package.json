@@ -13,7 +13,7 @@
     "data:fetch": "tsx scripts/fetch-vpic.mjs && tsx scripts/fetch-fueleconomy.mjs && tsx scripts/scrape-wikipedia-tow.mjs",
     "data:merge": "tsx scripts/merge-towing-dataset.mjs",
     "data:all": "npm run data:fetch && npm run data:merge",
-    "test": "node --import tsx/esm --test tests/",
+    "test": "node --import tsx/esm --test \"tests/**/*.test.mjs\"",
     "crawl-check": "node scripts/crawl-graph-check.mjs",
     "indexnow": "node scripts/indexnow-ping.mjs"
   },
