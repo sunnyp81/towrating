@@ -38,12 +38,23 @@ for (const h of hero.models) {
   heroByModel.set(`${h.make.toLowerCase()}|${h.model.toLowerCase()}`, h);
 }
 
+function titleCase(s) {
+  // Title-case makes/models. Preserve known acronymic brands.
+  const PRESERVE_UPPER = new Set(['BMW', 'GMC', 'MG']);
+  return s.split(/(\s+|-|\/)/).map(part => {
+    if (/^\s+$|^[-/]$/.test(part)) return part;
+    if (PRESERVE_UPPER.has(part.toUpperCase())) return part.toUpperCase();
+    if (/^\d/.test(part)) return part; // keep "1500", "150" digits
+    return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
+  }).join('');
+}
+
 // Group VPIC by make+model
 const grouped = new Map();
 for (const r of vpic) {
   if (r.year < 2001) continue;
   const key = `${r.makeName.toLowerCase()}|${r.modelName.toLowerCase()}`;
-  if (!grouped.has(key)) grouped.set(key, { makeName: r.makeName, modelName: r.modelName, years: new Map() });
+  if (!grouped.has(key)) grouped.set(key, { makeName: titleCase(r.makeName), modelName: titleCase(r.modelName), years: new Map() });
   const g = grouped.get(key);
   if (!g.years.has(r.year)) g.years.set(r.year, []);
   g.years.get(r.year).push(r);

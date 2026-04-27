@@ -10,8 +10,24 @@ const popularModels = makes.flatMap(m => m.models)
   .slice(0, 12);
 const indexableMakes = makes.filter(m => m.models.some(md => md.indexable))
   .sort((a, b) => a.makeLabel.localeCompare(b.makeLabel));
+const homeJsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'towrating.net',
+    url: 'https://towrating.net',
+    description: 'Verified US vehicle towing capacities — max tow, payload, GCWR, tongue weight, and hitch class for every truck, SUV, and crossover.',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'towrating.net',
+    url: 'https://towrating.net',
+    logo: 'https://towrating.net/og-default.png',
+  },
+];
 ---
-<Base title="towrating.net — Verified US Vehicle Towing Capacities" description="Find the verified towing capacity of any US vehicle. Search by year, make, model, trim, or capacity bracket. Free to use, manufacturer-sourced data.">
+<Base title="towrating.net — Verified US Vehicle Towing Capacities" description="Find the verified towing capacity of any US vehicle. Search by year, make, model, trim, or capacity bracket. Free to use, manufacturer-sourced data." jsonLd={homeJsonLd}>
   <section class="bg-brand-900 text-white">
     <div class="max-w-5xl mx-auto px-4 py-16 text-center">
       <h1 class="font-display text-5xl font-bold mb-4">Verified US towing capacities</h1>

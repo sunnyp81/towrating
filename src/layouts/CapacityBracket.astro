@@ -10,7 +10,7 @@ const { bracket } = Astro.props;
 const groupedByClass: Record<string, typeof bracket.vehicles> = {};
 for (const v of bracket.vehicles) (groupedByClass[v.vehicleClass] ??= []).push(v);
 const title = `Vehicles That Tow Up to ${formatLbs(bracket.lbs)} — Trucks, SUVs, & More`;
-const description = `Every truck, SUV, and crossover with a maximum towing capacity in the ${bracket.label} bracket. Compare max tow ratings and find the right vehicle for your trailer.`;
+const description = `Trucks, SUVs, and crossovers with max towing capacity in the ${bracket.label} bracket. Compare ratings and find the right vehicle.`;
 const crumbs = [{ name: 'Home', href: '/' }, { name: 'By Capacity', href: '/tow-by-capacity/' }, { name: bracket.label, href: `/tow-by-capacity/${bracket.lbs}/` }];
 const jsonLd = [breadcrumbList(crumbs), collectionPage({ name: title, description, url: `/tow-by-capacity/${bracket.lbs}/` })];
 const trailerHint = bracket.lbs >= 10000 ? 'large travel trailers, lightweight fifth-wheels, horse trailers, and bigger boats' : bracket.lbs >= 5000 ? 'mid-size travel trailers, pop-up campers, and small boats' : 'small utility trailers, jet skis, and pop-up campers';
