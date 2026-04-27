@@ -1,0 +1,39 @@
+---
+import Base from './Base.astro';
+import BreadcrumbList from '../components/BreadcrumbList.astro';
+import { breadcrumbList, collectionPage } from '../lib/schema.ts';
+import { formatLbs } from '../lib/capacity-utils.ts';
+import type { Make } from '../lib/types.ts';
+
+interface Props { make: Make; }
+const { make } = Astro.props;
+const indexableModels = make.models.filter(m => m.indexable);
+const groupedByClass: Record<string, typeof indexableModels> = {};
+for (const m of indexableModels) (groupedByClass[m.vehicleClass] ??= []).push(m);
+const minTow = indexableModels.length ? Math.min(...indexableModels.map(m => m.bestTowLbsAllTime ?? 9e9)) : 0;
+const maxTow = indexableModels.length ? Math.max(...indexableModels.map(m => m.bestTowLbsAllTime ?? 0)) : 0;
+const title = `${make.makeLabel} Towing Capacities — All Models, Trucks, SUVs`;
+const description = `${make.makeLabel} towing capacities for trucks, SUVs, and crossovers across all model years. Compare max tow, payload, and GCWR for every ${make.makeLabel} model.`;
+const crumbs = [{ name: 'Home', href: '/' }, { name: make.makeLabel, href: `/${make.makeSlug}/` }];
+const jsonLd = [breadcrumbList(crumbs), collectionPage({ name: title, description, url: `/${make.makeSlug}/` })];
+---
+<Base title={title} description={description} jsonLd={jsonLd}>
+  <article class="max-w-5xl mx-auto px-4 py-8">
+    <BreadcrumbList items={crumbs} />
+    <h1 class="font-display text-4xl font-bold text-brand-900 mb-4">{title}</h1>
+    <p class="text-lg text-slate-700 leading-relaxed mb-6">{make.makeLabel} sells {indexableModels.length} models with documented towing capacity, ranging from {formatLbs(minTow)} to {formatLbs(maxTow)}. Browse by vehicle class:</p>
+    {Object.entries(groupedByClass).map(([cls, models]) => (
+      <section class="my-8">
+        <h2 class="font-display text-2xl font-semibold mb-3 capitalize">{cls}s</h2>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {models.map(m => (
+            <a href={`/${make.makeSlug}/${m.modelSlug}/`} class="block rounded-lg border border-slate-200 bg-white p-4 hover:border-accent-500 hover:shadow-sm transition">
+              <div class="font-display font-semibold text-brand-900">{m.modelLabel}</div>
+              <div class="text-sm text-slate-600">Max tow {formatLbs(m.bestTowLbsAllTime)}</div>
+            </a>
+          ))}
+        </div>
+      </section>
+    ))}
+  </article>
+</Base>

@@ -1,0 +1,49 @@
+---
+import Base from './Base.astro';
+import BreadcrumbList from '../components/BreadcrumbList.astro';
+import QuickAnswerBox from '../components/QuickAnswerBox.astro';
+import { breadcrumbList, collectionPage } from '../lib/schema.ts';
+import { formatLbs } from '../lib/capacity-utils.ts';
+import type { Model } from '../lib/types.ts';
+
+interface Props { model: Model; }
+const { model } = Astro.props;
+const indexableYears = model.years.filter(y => y.indexable).sort((a, b) => b.year - a.year);
+const oldest = indexableYears[indexableYears.length - 1]?.year;
+const newest = indexableYears[0]?.year;
+const title = `${model.makeLabel} ${model.modelLabel} Towing Capacity by Year — All Generations`;
+const description = `Complete towing-capacity history for the ${model.makeLabel} ${model.modelLabel}: max tow, payload, GCWR, and hitch class for every model year ${oldest ?? ''}–${newest ?? ''}.`;
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: model.makeLabel, href: `/${model.makeSlug}/` },
+  { name: model.modelLabel, href: `/${model.makeSlug}/${model.modelSlug}/` },
+];
+const jsonLd = [breadcrumbList(crumbs), collectionPage({ name: title, description, url: `/${model.makeSlug}/${model.modelSlug}/` })];
+const bestTrim = indexableYears[0]?.trims.find(t => t.specs.maxTowLbs === indexableYears[0].bestTowLbs);
+---
+<Base title={title} description={description} noindex={!model.indexable} jsonLd={jsonLd}>
+  <article class="max-w-5xl mx-auto px-4 py-8">
+    <BreadcrumbList items={crumbs} />
+    <h1 class="font-display text-4xl font-bold text-brand-900 mb-4">{title}</h1>
+    <p class="text-lg text-slate-700 leading-relaxed mb-6">The {model.makeLabel} {model.modelLabel} is a {model.vehicleClass} produced from {oldest} to {newest}. Its all-time best towing capacity is {formatLbs(model.bestTowLbsAllTime)}, achieved on top trims of the most recent generation.</p>
+    {bestTrim && <QuickAnswerBox specs={bestTrim.specs} />}
+    <section class="my-8">
+      <h2 class="font-display text-2xl font-semibold mb-4">Towing capacity by model year</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead><tr class="bg-slate-100 text-left"><th class="p-3">Year</th><th class="p-3">Max Tow</th><th class="p-3">Trims</th><th class="p-3"></th></tr></thead>
+          <tbody>
+            {indexableYears.map(y => (
+              <tr class="border-t border-slate-200">
+                <td class="p-3 font-semibold">{y.year}</td>
+                <td class="p-3">{formatLbs(y.bestTowLbs)}</td>
+                <td class="p-3">{y.trims.length}</td>
+                <td class="p-3"><a href={`/${model.makeSlug}/${model.modelSlug}/${y.year}/`} class="text-brand-700 hover:underline">View {y.year} →</a></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </article>
+</Base>

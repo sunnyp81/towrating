@@ -1,0 +1,38 @@
+---
+import Base from './Base.astro';
+import BreadcrumbList from '../components/BreadcrumbList.astro';
+import { breadcrumbList, collectionPage } from '../lib/schema.ts';
+import { formatLbs } from '../lib/capacity-utils.ts';
+import type { CapacityBracket } from '../lib/types.ts';
+
+interface Props { bracket: CapacityBracket; }
+const { bracket } = Astro.props;
+const groupedByClass: Record<string, typeof bracket.vehicles> = {};
+for (const v of bracket.vehicles) (groupedByClass[v.vehicleClass] ??= []).push(v);
+const title = `Vehicles That Tow Up to ${formatLbs(bracket.lbs)} — Trucks, SUVs, & More`;
+const description = `Every truck, SUV, and crossover with a maximum towing capacity in the ${bracket.label} bracket. Compare max tow ratings and find the right vehicle for your trailer.`;
+const crumbs = [{ name: 'Home', href: '/' }, { name: 'By Capacity', href: '/tow-by-capacity/' }, { name: bracket.label, href: `/tow-by-capacity/${bracket.lbs}/` }];
+const jsonLd = [breadcrumbList(crumbs), collectionPage({ name: title, description, url: `/tow-by-capacity/${bracket.lbs}/` })];
+const trailerHint = bracket.lbs >= 10000 ? 'large travel trailers, lightweight fifth-wheels, horse trailers, and bigger boats' : bracket.lbs >= 5000 ? 'mid-size travel trailers, pop-up campers, and small boats' : 'small utility trailers, jet skis, and pop-up campers';
+---
+<Base title={title} description={description} jsonLd={jsonLd}>
+  <article class="max-w-5xl mx-auto px-4 py-8">
+    <BreadcrumbList items={crumbs} />
+    <h1 class="font-display text-4xl font-bold text-brand-900 mb-4">{title}</h1>
+    <p class="text-lg text-slate-700 leading-relaxed mb-6">Vehicles in the {bracket.label} towing bracket are rated to pull trailers up to {formatLbs(bracket.lbs)}. This range typically covers {trailerHint}.</p>
+    {Object.entries(groupedByClass).map(([cls, vehicles]) => (
+      <section class="my-8">
+        <h2 class="font-display text-2xl font-semibold mb-3 capitalize">{cls}s</h2>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {vehicles.slice(0, 30).map(v => (
+            <a href={`/${v.makeSlug}/${v.modelSlug}/${v.year}/${v.trimSlug ? v.trimSlug + '/' : ''}`} class="block rounded-lg border border-slate-200 bg-white p-4 hover:border-accent-500">
+              <div class="text-xs text-slate-500">{v.year}</div>
+              <div class="font-display font-semibold text-brand-900 capitalize">{v.makeSlug.replace(/-/g, ' ')} {v.modelSlug.replace(/-/g, ' ')}</div>
+              <div class="text-sm text-accent-600 font-bold">{formatLbs(v.maxTowLbs)}</div>
+            </a>
+          ))}
+        </div>
+      </section>
+    ))}
+  </article>
+</Base>

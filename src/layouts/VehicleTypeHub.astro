@@ -1,0 +1,36 @@
+---
+import Base from './Base.astro';
+import BreadcrumbList from '../components/BreadcrumbList.astro';
+import { breadcrumbList, collectionPage } from '../lib/schema.ts';
+import { formatLbs } from '../lib/capacity-utils.ts';
+
+interface Props {
+  type: string;
+  vehicles: Array<{ makeSlug: string; modelSlug: string; year: number; bestTowLbs: number; modelLabel: string; makeLabel: string }>;
+}
+const { type, vehicles } = Astro.props;
+const title = `Best ${type.charAt(0).toUpperCase() + type.slice(1)}s for Towing — Capacity Comparison`;
+const description = `Compare ${type} towing capacities across every major US make. Sortable by max tow capacity, year, and trim.`;
+const crumbs = [{ name: 'Home', href: '/' }, { name: 'By Vehicle Type', href: '/tow-by-vehicle-type/' }, { name: `${type}s`, href: `/tow-by-vehicle-type/${type}/` }];
+const jsonLd = [breadcrumbList(crumbs), collectionPage({ name: title, description, url: `/tow-by-vehicle-type/${type}/` })];
+const topTow = vehicles.length ? Math.max(...vehicles.map(v => v.bestTowLbs)) : 0;
+---
+<Base title={title} description={description} jsonLd={jsonLd}>
+  <article class="max-w-5xl mx-auto px-4 py-8">
+    <BreadcrumbList items={crumbs} />
+    <h1 class="font-display text-4xl font-bold text-brand-900 mb-4">{title}</h1>
+    <p class="text-lg text-slate-700 leading-relaxed mb-6">There are {vehicles.length} {type}s in our database with documented towing capacities. Top tow rating in this class: {formatLbs(topTow)}.</p>
+    <table class="w-full text-sm">
+      <thead><tr class="bg-slate-100 text-left"><th class="p-3">Vehicle</th><th class="p-3">Year</th><th class="p-3">Max Tow</th></tr></thead>
+      <tbody>
+        {vehicles.slice(0, 100).map(v => (
+          <tr class="border-t border-slate-200">
+            <td class="p-3"><a href={`/${v.makeSlug}/${v.modelSlug}/${v.year}/`} class="text-brand-700 hover:underline">{v.makeLabel} {v.modelLabel}</a></td>
+            <td class="p-3">{v.year}</td>
+            <td class="p-3 font-semibold">{formatLbs(v.bestTowLbs)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </article>
+</Base>
