@@ -14,7 +14,12 @@ function findHtml(dir, out = []) {
 }
 
 function pathToUrl(p) {
-  return '/' + p.replace(DIST + '/', '').replace(/\\/g, '/').replace(/index\.html$/, '').replace(/\.html$/, '/');
+  // Normalise to forward slashes first so prefix stripping works on Windows + Unix
+  const normP = p.replace(/\\/g, '/');
+  const normDist = DIST.replace(/\\/g, '/');
+  let rel = normP.startsWith(normDist) ? normP.slice(normDist.length) : normP;
+  if (!rel.startsWith('/')) rel = '/' + rel;
+  return rel.replace(/index\.html$/, '').replace(/\.html$/, '/');
 }
 
 function extractLinks(html) {

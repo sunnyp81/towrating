@@ -17,7 +17,7 @@ const description = `${make.makeLabel} towing capacities for trucks, SUVs, and c
 const crumbs = [{ name: 'Home', href: '/' }, { name: make.makeLabel, href: `/${make.makeSlug}/` }];
 const jsonLd = [breadcrumbList(crumbs), collectionPage({ name: title, description, url: `/${make.makeSlug}/` })];
 ---
-<Base title={title} description={description} jsonLd={jsonLd}>
+<Base title={title} description={description} noindex={indexableModels.length === 0} jsonLd={jsonLd}>
   <article class="max-w-5xl mx-auto px-4 py-8">
     <BreadcrumbList items={crumbs} />
     <h1 class="font-display text-4xl font-bold text-brand-900 mb-4">{title}</h1>
