@@ -4,11 +4,11 @@ import type { TowingSpecs } from '../lib/types.ts';
 interface Props { specs: TowingSpecs; }
 const { specs } = Astro.props;
 const items = [
-  { label: 'Max Tow', value: formatLbs(specs.maxTowLbs) },
-  { label: 'Payload', value: formatLbs(specs.payloadLbs) },
-  { label: 'GCWR', value: formatLbs(specs.gcwrLbs) },
-  { label: 'Tongue Weight', value: formatLbs(specs.tongueWeightLbs) },
-  { label: 'Hitch Class', value: specs.hitchClass ?? 'N/A' },
+  { label: 'Max Tow', value: formatLbs(specs.maxTowLbs), note: null },
+  { label: 'Payload', value: formatLbs(specs.payloadLbs), note: null },
+  { label: 'GCWR', value: formatLbs(specs.gcwrLbs), note: null },
+  { label: 'Tongue Weight', value: formatLbs(specs.tongueWeightLbs), note: '*' },
+  { label: 'Hitch Class', value: specs.hitchClass ?? 'N/A', note: null },
 ];
 ---
 <aside class="rounded-lg border border-brand-700 bg-brand-900 text-white p-6 my-6 shadow-md">
@@ -16,9 +16,10 @@ const items = [
   <dl class="grid grid-cols-2 md:grid-cols-5 gap-4">
     {items.map(it => (
       <div>
-        <dt class="text-xs uppercase tracking-wide text-slate-300">{it.label}</dt>
+        <dt class="text-xs uppercase tracking-wide text-slate-300">{it.label}{it.note}</dt>
         <dd class="font-display text-2xl font-bold">{it.value}</dd>
       </div>
     ))}
   </dl>
+  {specs.tongueWeightLbs && <p class="mt-4 text-xs text-slate-400">* Tongue weight calculated as 10% of max tow rating (industry-standard recommendation). Consult your owner's manual for manufacturer-specific tongue-weight ratings.</p>}
 </aside>
