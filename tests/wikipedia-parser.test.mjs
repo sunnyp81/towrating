@@ -40,3 +40,40 @@ test('extractTowSpecs: returns nulls when no data', () => {
   assert.equal(specs.maxTowLbs, null);
   assert.equal(specs.payloadLbs, null);
 });
+
+test('extractTowSpecs: parses modern Wikipedia infobox with nested tags', () => {
+  const html = `
+    <table class="infobox vcard">
+      <tbody>
+        <tr><th scope="row">Curb weight</th><td>4,500 <abbr title="pounds">lb</abbr> (2,041 kg)</td></tr>
+        <tr><th scope="row">Towing capacity</th><td><span class="nowrap">11,300 lb</span> (5,126 kg)</td></tr>
+        <tr><th scope="row">Payload capacity</th><td>2,238 <abbr title="pounds">lb</abbr></td></tr>
+      </tbody>
+    </table>
+  `;
+  const specs = extractTowSpecs(html);
+  assert.equal(specs.maxTowLbs, 11300);
+  assert.equal(specs.payloadLbs, 2238);
+});
+
+test('extractTowSpecs: parses <li> label:value format (F-150 style)', () => {
+  const html = `
+    <ul>
+      <li>Maximum payload: 2,120 pounds (960 kg)</li>
+      <li>Maximum towing capacity: 12,700 pounds (5,800 kg)</li>
+      <li>Two 120V, 20A household outlets standard</li>
+    </ul>
+  `;
+  const specs = extractTowSpecs(html);
+  assert.equal(specs.maxTowLbs, 12700);
+  assert.equal(specs.payloadLbs, 2120);
+});
+
+test('extractTowSpecs: parses towing from paragraph prose (Tundra style)', () => {
+  const html = `
+    <p>The maximum towing capacity and the maximum payload are increased to
+    12,000 pounds (5,400 kg) and 1,940 pounds (880 kg) respectively.</p>
+  `;
+  const specs = extractTowSpecs(html);
+  assert.equal(specs.maxTowLbs, 12000);
+});

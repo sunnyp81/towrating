@@ -57,7 +57,8 @@ while (queue.length) {
   }
 }
 
-const unreachable = [...graph.keys()].filter(u => !visited.has(u));
+// /404/ is a valid error page — intentionally not linked from navigation
+const unreachable = [...graph.keys()].filter(u => !visited.has(u) && u !== '/404/');
 console.log(`Reachable within ${MAX_DEPTH} clicks: ${visited.size}`);
 console.log(`UNREACHABLE: ${unreachable.length}`);
 if (unreachable.length > 0) {
