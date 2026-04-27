@@ -1,12 +1,13 @@
 ---
 import Base from './Base.astro';
 import BreadcrumbList from '../components/BreadcrumbList.astro';
-import { breadcrumbList, articleSchema } from '../lib/schema.ts';
+import { breadcrumbList, articleSchema, faqPage } from '../lib/schema.ts';
 
-interface Props { title: string; description: string; slug: string; publishDate: string; }
-const { title, description, slug, publishDate } = Astro.props;
+interface Props { title: string; description: string; slug: string; publishDate: string; faqs?: Array<{ q: string; a: string }>; }
+const { title, description, slug, publishDate, faqs } = Astro.props;
 const crumbs = [{ name: 'Home', href: '/' }, { name: 'Guides', href: '/guide/' }, { name: title, href: `/guide/${slug}/` }];
-const jsonLd = [breadcrumbList(crumbs), articleSchema({ title, description, slug, datePublished: publishDate })];
+const jsonLd: object[] = [breadcrumbList(crumbs), articleSchema({ title, description, slug, datePublished: publishDate })];
+if (faqs && faqs.length > 0) jsonLd.push(faqPage(faqs));
 ---
 <Base title={title} description={description} jsonLd={jsonLd}>
   <article class="max-w-3xl mx-auto px-4 py-8">
