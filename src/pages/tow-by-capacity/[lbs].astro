@@ -1,0 +1,10 @@
+---
+import CapacityBracket from '../../layouts/CapacityBracket.astro';
+import { loadBracketIndex } from '../../lib/data-loader.ts';
+export async function getStaticPaths() {
+  const brackets = loadBracketIndex();
+  return brackets.map(b => ({ params: { lbs: String(b.lbs) }, props: { bracket: b } }));
+}
+const { bracket } = Astro.props;
+---
+<CapacityBracket bracket={bracket} />

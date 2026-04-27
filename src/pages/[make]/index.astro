@@ -1,0 +1,10 @@
+---
+import MakeHub from '../../layouts/MakeHub.astro';
+import { loadVehicles } from '../../lib/data-loader.ts';
+export async function getStaticPaths() {
+  const makes = loadVehicles();
+  return makes.map(make => ({ params: { make: make.makeSlug }, props: { make } }));
+}
+const { make } = Astro.props;
+---
+<MakeHub make={make} />

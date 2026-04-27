@@ -1,0 +1,12 @@
+---
+import Base from '../../layouts/Base.astro';
+const types = ['truck', 'suv', 'minivan', 'sedan', 'crossover'];
+---
+<Base title="Tow by Vehicle Type" description="Browse towing capacity by vehicle class — trucks, SUVs, crossovers, minivans, sedans.">
+  <section class="max-w-5xl mx-auto px-4 py-12">
+    <h1 class="font-display text-4xl font-bold mb-6">Browse by vehicle type</h1>
+    <ul class="grid sm:grid-cols-3 gap-4">
+      {types.map(t => <li><a class="block rounded-lg border border-slate-200 p-5 capitalize hover:border-accent-500" href={`/tow-by-vehicle-type/${t}/`}>{t}s</a></li>)}
+    </ul>
+  </section>
+</Base>

@@ -1,0 +1,34 @@
+---
+import TrimPage from '../../../../layouts/TrimPage.astro';
+import { loadVehicles, loadBracketIndex } from '../../../../lib/data-loader.ts';
+import { assignBracket } from '../../../../lib/capacity-utils.ts';
+export async function getStaticPaths() {
+  const makes = loadVehicles();
+  const brackets = loadBracketIndex();
+  const out = [];
+  for (const make of makes) for (const model of make.models) {
+    const years = model.years.sort((a, b) => a.year - b.year);
+    for (let i = 0; i < years.length; i++) {
+      const y = years[i];
+      // skip pseudo-base wiki-derived single-trim — only ship multi-trim hero years
+      if (y.trims.length < 2) continue;
+      const sameClass = make.models.filter(m => m.vehicleClass === model.vehicleClass && m.modelSlug !== model.modelSlug).slice(0, 3).map(m => m.modelSlug);
+      for (const trim of y.trims) {
+        const bracket = assignBracket(trim.specs.maxTowLbs ?? 0);
+        const altBracket = bracket && brackets.find(b => b.lbs === bracket.lbs);
+        const alternates = altBracket?.vehicles
+          .filter(v => v.makeSlug !== make.makeSlug)
+          .slice(0, 3)
+          .map(v => ({ makeSlug: v.makeSlug, modelSlug: v.modelSlug, year: v.year, label: `${v.makeSlug.replace(/-/g, ' ')} ${v.modelSlug.replace(/-/g, ' ')}`, maxTowLbs: v.maxTowLbs })) ?? [];
+        out.push({
+          params: { make: make.makeSlug, model: model.modelSlug, year: String(y.year), trim: trim.trimSlug },
+          props: { model, year: y, trim, siblingMakeClass: sameClass, alternates, prevYear: years[i - 1]?.year ?? null, nextYear: years[i + 1]?.year ?? null },
+        });
+      }
+    }
+  }
+  return out;
+}
+const { model, year, trim, siblingMakeClass, alternates, prevYear, nextYear } = Astro.props;
+---
+<TrimPage model={model} year={year} trim={trim} siblingMakeClass={siblingMakeClass} alternates={alternates} prevYear={prevYear} nextYear={nextYear} />

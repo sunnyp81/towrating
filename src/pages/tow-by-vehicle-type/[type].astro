@@ -1,0 +1,17 @@
+---
+import VehicleTypeHub from '../../layouts/VehicleTypeHub.astro';
+import { loadVehicles } from '../../lib/data-loader.ts';
+export async function getStaticPaths() {
+  const makes = loadVehicles();
+  const TYPES = ['truck', 'suv', 'minivan', 'sedan', 'crossover'];
+  return TYPES.map(type => {
+    const vehicles = makes.flatMap(m => m.models).filter(md => md.vehicleClass === type && md.indexable).flatMap(md => {
+      const bestYear = md.years.sort((a, b) => (b.bestTowLbs ?? 0) - (a.bestTowLbs ?? 0))[0];
+      return bestYear ? [{ makeSlug: md.makeSlug, modelSlug: md.modelSlug, year: bestYear.year, bestTowLbs: bestYear.bestTowLbs ?? 0, modelLabel: md.modelLabel, makeLabel: md.makeLabel }] : [];
+    }).sort((a, b) => b.bestTowLbs - a.bestTowLbs);
+    return { params: { type }, props: { type, vehicles } };
+  });
+}
+const { type, vehicles } = Astro.props;
+---
+<VehicleTypeHub type={type} vehicles={vehicles} />

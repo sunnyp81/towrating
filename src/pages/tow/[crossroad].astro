@@ -1,0 +1,52 @@
+---
+import UseCaseCrossroad from '../../layouts/UseCaseCrossroad.astro';
+import { loadVehicles } from '../../lib/data-loader.ts';
+
+export async function getStaticPaths() {
+  const TRAILER_LABELS: Record<string, string> = {
+    'travel-trailer': 'travel trailer',
+    'fifth-wheel': 'fifth-wheel',
+    'boat': 'boat',
+    'horse-trailer': 'horse trailer',
+  };
+  const CLASS_LABELS: Record<string, { label: string; class: string; minTow: number; maxTow: number }> = {
+    'half-ton': { label: 'half-ton truck', class: 'truck', minTow: 8000, maxTow: 13500 },
+    'heavy-duty': { label: 'heavy-duty truck', class: 'truck', minTow: 13500, maxTow: 35000 },
+    'suv': { label: 'SUV', class: 'suv', minTow: 5000, maxTow: 12000 },
+    'crossover': { label: 'crossover', class: 'crossover', minTow: 1500, maxTow: 5500 },
+  };
+  const CROSSROADS = [
+    { trailer: 'travel-trailer', cls: 'half-ton' },
+    { trailer: 'travel-trailer', cls: 'heavy-duty' },
+    { trailer: 'travel-trailer', cls: 'suv' },
+    { trailer: 'fifth-wheel', cls: 'heavy-duty' },
+    { trailer: 'fifth-wheel', cls: 'half-ton' },
+    { trailer: 'boat', cls: 'half-ton' },
+    { trailer: 'boat', cls: 'suv' },
+    { trailer: 'boat', cls: 'crossover' },
+    { trailer: 'horse-trailer', cls: 'half-ton' },
+    { trailer: 'horse-trailer', cls: 'heavy-duty' },
+  ];
+  const makes = loadVehicles();
+  return CROSSROADS.map(({ trailer, cls }) => {
+    const cInfo = CLASS_LABELS[cls];
+    const vehicles = makes.flatMap(m => m.models).filter(md => md.vehicleClass === cInfo.class && md.indexable).flatMap(md => {
+      const bestYear = md.years.find(y => (y.bestTowLbs ?? 0) >= cInfo.minTow && (y.bestTowLbs ?? 0) <= cInfo.maxTow);
+      return bestYear ? [{ makeSlug: md.makeSlug, modelSlug: md.modelSlug, year: bestYear.year, maxTowLbs: bestYear.bestTowLbs ?? 0 }] : [];
+    }).sort((a, b) => b.maxTowLbs - a.maxTowLbs).slice(0, 20);
+    return {
+      params: { crossroad: `${trailer}-with-${cls}` },
+      props: {
+        crossroad: {
+          slug: `${trailer}-with-${cls}`,
+          trailer, vehicleClass: cInfo.class,
+          trailerLabel: TRAILER_LABELS[trailer], classLabel: cInfo.label,
+          vehicles,
+        },
+      },
+    };
+  });
+}
+const { crossroad } = Astro.props;
+---
+<UseCaseCrossroad crossroad={crossroad} />
