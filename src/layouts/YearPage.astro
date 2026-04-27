@@ -5,7 +5,7 @@ import QuickAnswerBox from '../components/QuickAnswerBox.astro';
 import TrimComparisonTable from '../components/TrimComparisonTable.astro';
 import FAQSection from '../components/FAQSection.astro';
 import AffiliateBox from '../components/AffiliateBox.astro';
-import { breadcrumbList, itemListFromTrims, faqPage } from '../lib/schema.ts';
+import { breadcrumbList, itemListFromTrims, faqPage, vehicleSchema } from '../lib/schema.ts';
 import { buildSpokeLinks } from '../lib/internal-links.ts';
 import { formatLbs, assignBracket } from '../lib/capacity-utils.ts';
 import { carGurusUrl } from '../lib/affiliate.ts';
@@ -28,6 +28,7 @@ const faqs = [
   { q: `Which trim of the ${year.year} ${model.modelLabel} tows the most?`, a: `The ${bestTrim.trimLabel} trim has the highest tow rating at ${formatLbs(bestTrim.specs.maxTowLbs)}.` },
 ];
 const jsonLd = [
+  vehicleSchema(model, year, bestTrim),
   breadcrumbList(crumbs),
   itemListFromTrims(year.trims, year.year, model.makeSlug, model.modelSlug),
   faqPage(faqs),
@@ -36,7 +37,11 @@ const bracket = assignBracket(year.bestTowLbs ?? 0);
 const links = buildSpokeLinks({
   makeSlug: model.makeSlug, modelSlug: model.modelSlug, year: year.year,
   maxTowLbs: year.bestTowLbs ?? 0, vehicleClass: model.vehicleClass,
-  siblings: { sameYearTrims: year.trims.map(t => t.trimSlug).slice(0, 2), prevYear, nextYear, sameMakeClass: siblingMakeClass },
+  siblings: {
+    sameYearTrims: year.trims.slice(0, 2).map(t => ({ slug: t.trimSlug, label: t.trimLabel })),
+    prevYear, nextYear,
+    sameMakeClass: siblingMakeClass.map(slug => ({ slug, label: slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) })),
+  },
   bracketLbs: bracket?.lbs ?? 10000,
   contextualGuide: 'gcwr-explained',
 });

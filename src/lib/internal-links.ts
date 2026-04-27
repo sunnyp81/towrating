@@ -6,10 +6,10 @@ export interface SpokeLinkContext {
   maxTowLbs: number;
   vehicleClass: string;
   siblings: {
-    sameYearTrims: string[];
+    sameYearTrims: Array<{ slug: string; label: string }>;
     prevYear: number | null;
     nextYear: number | null;
-    sameMakeClass: string[];
+    sameMakeClass: Array<{ slug: string; label: string }>;
   };
   bracketLbs: number;
   contextualGuide: string;
@@ -26,13 +26,13 @@ export function buildSpokeLinks(ctx: SpokeLinkContext): InternalLink[] {
   const base = `/${ctx.makeSlug}/${ctx.modelSlug}/${ctx.year}`;
 
   for (const t of ctx.siblings.sameYearTrims.slice(0, 2)) {
-    links.push({ href: `${base}/${t}/`, label: `${ctx.year} sibling trim ${t.replace(/-/g, ' ')}` });
+    links.push({ href: `${base}/${t.slug}/`, label: `${ctx.year} ${t.label}` });
   }
   if (ctx.siblings.prevYear) links.push({ href: `/${ctx.makeSlug}/${ctx.modelSlug}/${ctx.siblings.prevYear}/`, label: `${ctx.siblings.prevYear} model` });
   if (ctx.siblings.nextYear) links.push({ href: `/${ctx.makeSlug}/${ctx.modelSlug}/${ctx.siblings.nextYear}/`, label: `${ctx.siblings.nextYear} model` });
 
   for (const m of ctx.siblings.sameMakeClass.slice(0, 3)) {
-    links.push({ href: `/${ctx.makeSlug}/${m}/`, label: `${ctx.makeSlug} ${m.replace(/-/g, ' ')}` });
+    links.push({ href: `/${ctx.makeSlug}/${m.slug}/`, label: m.label });
   }
   links.push({ href: `/tow-by-capacity/${ctx.bracketLbs}/`, label: `${ctx.bracketLbs.toLocaleString()} lbs towing` });
   links.push({ href: `/guide/${ctx.contextualGuide}/`, label: 'Towing guide' });

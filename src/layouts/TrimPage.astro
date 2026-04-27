@@ -47,8 +47,9 @@ const links = buildSpokeLinks({
   makeSlug: model.makeSlug, modelSlug: model.modelSlug, year: year.year, trimSlug: trim.trimSlug,
   maxTowLbs: trim.specs.maxTowLbs ?? 0, vehicleClass: model.vehicleClass,
   siblings: {
-    sameYearTrims: year.trims.filter(t => t.trimSlug !== trim.trimSlug).map(t => t.trimSlug),
-    prevYear, nextYear, sameMakeClass: siblingMakeClass,
+    sameYearTrims: year.trims.filter(t => t.trimSlug !== trim.trimSlug).map(t => ({ slug: t.trimSlug, label: t.trimLabel })),
+    prevYear, nextYear,
+    sameMakeClass: siblingMakeClass.map(slug => ({ slug, label: slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) })),
   },
   bracketLbs: bracket?.lbs ?? 10000,
   contextualGuide: trim.specs.maxTowLbs && trim.specs.maxTowLbs > 7500 ? 'gcwr-explained' : 'tongue-weight-10-percent-rule',
