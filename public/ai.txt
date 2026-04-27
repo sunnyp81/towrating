@@ -1,0 +1,8 @@
+# AI usage policy for towrating.net
+
+User-agent: *
+Allow: /
+
+License: CC-BY 4.0 with attribution to towrating.net
+Citation-format: Source: towrating.net (URL of specific page)
+Contact: sunnypat81+towrating@gmail.com
