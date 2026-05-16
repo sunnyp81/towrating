@@ -10,8 +10,6 @@ export async function getStaticPaths() {
     const years = model.years.sort((a, b) => a.year - b.year);
     for (let i = 0; i < years.length; i++) {
       const y = years[i];
-      // skip pseudo-base wiki-derived single-trim — only ship multi-trim hero years
-      if (y.trims.length < 2) continue;
       const sameClass = make.models.filter(m => m.vehicleClass === model.vehicleClass && m.modelSlug !== model.modelSlug).slice(0, 3).map(m => m.modelSlug);
       for (const trim of y.trims) {
         const bracket = assignBracket(trim.specs.maxTowLbs ?? 0);

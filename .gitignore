@@ -6,3 +6,17 @@ dist/
 data/*.json
 !src/data/hero-models.json
 .DS_Store
+
+# leak-scan: appended 2026-05-01
+.env.*
+.env.production
+*.pem
+*.key
+credentials.json
+credentials*.json
+secrets.*
+.wrangler/
+.vercel/
+.next/cache/
+wordpress-config.md
+master-builds.md
