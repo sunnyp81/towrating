@@ -34,7 +34,7 @@ const og = ogImage ?? 'https://towrating.net/og-default.png';
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
   {jsonLd.map(j => <script type="application/ld+json" set:html={JSON.stringify(j)} />)}
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SJ8NF6EKLP"></script>
+  <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-SJ8NF6EKLP"></script>
   <script is:inline>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-SJ8NF6EKLP');</script>
 </head>
 <body class="min-h-screen flex flex-col">
