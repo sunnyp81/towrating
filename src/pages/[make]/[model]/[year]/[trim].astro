@@ -12,6 +12,7 @@ export async function getStaticPaths() {
       const y = years[i];
       const sameClass = make.models.filter(m => m.vehicleClass === model.vehicleClass && m.modelSlug !== model.modelSlug).slice(0, 3).map(m => m.modelSlug);
       for (const trim of y.trims) {
+        if (!trim.indexable) continue;
         const bracket = assignBracket(trim.specs.maxTowLbs ?? 0);
         const altBracket = bracket && brackets.find(b => b.lbs === bracket.lbs);
         const alternates = altBracket?.vehicles

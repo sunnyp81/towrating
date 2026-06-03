@@ -1,4 +1,4 @@
-# towrating.net robots.txt
+# towrating.org robots.txt
 # Allow search, AI input (citations in answer engines), and AI training.
 # Content-Signal overrides Cloudflare's default ai-train=no injection.
 
@@ -60,4 +60,4 @@ Allow: /
 User-agent: YouBot
 Allow: /
 
-Sitemap: https://towrating.net/sitemap-index.xml
+Sitemap: https://towrating.org/sitemap-index.xml

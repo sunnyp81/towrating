@@ -8,6 +8,7 @@ export async function getStaticPaths() {
     const years = model.years.sort((a, b) => a.year - b.year);
     for (let i = 0; i < years.length; i++) {
       const y = years[i];
+      if (!y.indexable) continue;
       const sameClass = make.models.filter(m => m.vehicleClass === model.vehicleClass && m.modelSlug !== model.modelSlug).slice(0, 3).map(m => m.modelSlug);
       out.push({
         params: { make: make.makeSlug, model: model.modelSlug, year: String(y.year) },

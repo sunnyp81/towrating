@@ -14,8 +14,8 @@ interface Props {
 
 const { title, description, canonical, noindex, ogImage, jsonLd = [] } = Astro.props;
 const pathname = Astro.url.pathname;
-const canonicalUrl = canonical ?? `https://towrating.net${pathname.endsWith('/') ? pathname : pathname + '/'}`;
-const og = ogImage ?? 'https://towrating.net/og-default.png';
+const canonicalUrl = canonical ?? `https://towrating.org${pathname.endsWith('/') ? pathname : pathname + '/'}`;
+const og = ogImage ?? 'https://towrating.org/og-default.png';
 ---
 <!doctype html>
 <html lang="en">

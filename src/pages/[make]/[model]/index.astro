@@ -3,7 +3,7 @@ import ModelHub from '../../../layouts/ModelHub.astro';
 import { loadVehicles } from '../../../lib/data-loader.ts';
 export async function getStaticPaths() {
   const makes = loadVehicles();
-  return makes.flatMap(make => make.models.map(model => ({
+  return makes.flatMap(make => make.models.filter(model => model.indexable).map(model => ({
     params: { make: make.makeSlug, model: model.modelSlug },
     props: { model },
   })));

@@ -1,6 +1,6 @@
 import type { Trim, Year, Model } from './types.ts';
 
-const SITE = 'https://towrating.net';
+const SITE = 'https://towrating.org';
 
 export function vehicleSchema(model: Model, year: Year, trim: Trim) {
   return {
@@ -61,8 +61,8 @@ export function articleSchema({ title, description, slug, datePublished }: { tit
     description,
     url: `${SITE}/guide/${slug}/`,
     datePublished,
-    author: { '@type': 'Organization', name: 'towrating.net' },
-    publisher: { '@type': 'Organization', name: 'towrating.net', url: SITE },
+    author: { '@type': 'Organization', name: 'towrating.org' },
+    publisher: { '@type': 'Organization', name: 'towrating.org', url: SITE },
   };
 }
 
