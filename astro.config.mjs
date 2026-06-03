@@ -4,7 +4,7 @@ import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  site: 'https://towrating.net',
+  site: 'https://towrating.org',
   output: 'static',
   integrations: [
     mdx(),
