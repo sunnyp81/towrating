@@ -23,8 +23,8 @@ const crumbs = [
   { name: String(year.year), href: `/${model.makeSlug}/${model.modelSlug}/${year.year}/` },
 ];
 const faqs = [
-  { q: `What is the towing capacity of a ${year.year} ${model.makeLabel} ${model.modelLabel}?`, a: `The ${year.year} ${model.makeLabel} ${model.modelLabel} has a maximum towing capacity of ${formatLbs(year.bestTowLbs)} on its top trim (${bestTrim.trimLabel}). Lower trims tow less — see the comparison table above.` },
-  { q: `How does ${year.year} ${model.modelLabel} compare to ${prevYear ?? year.year - 1}?`, a: `Capacity differences year-over-year are typically 100–500 lbs. View the ${prevYear ?? year.year - 1} model page below for direct comparison.` },
+  { q: `What is the towing capacity of a ${year.year} ${model.makeLabel} ${model.modelLabel}?`, a: `The ${year.year} ${model.makeLabel} ${model.modelLabel} has a maximum towing capacity of ${formatLbs(year.bestTowLbs)} on its top trim (${bestTrim.trimLabel}). Lower trims tow less, see the comparison table above.` },
+  { q: `How does ${year.year} ${model.modelLabel} compare to ${prevYear ?? year.year - 1}?`, a: `Capacity differences year-over-year are typically 100-500 lbs. View the ${prevYear ?? year.year - 1} model page below for direct comparison.` },
   { q: `Which trim of the ${year.year} ${model.modelLabel} tows the most?`, a: `The ${bestTrim.trimLabel} trim has the highest tow rating at ${formatLbs(bestTrim.specs.maxTowLbs)}.` },
 ];
 const jsonLd = [

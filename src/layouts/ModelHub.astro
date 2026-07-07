@@ -11,8 +11,8 @@ const { model } = Astro.props;
 const indexableYears = model.years.filter(y => y.indexable).sort((a, b) => b.year - a.year);
 const oldest = indexableYears[indexableYears.length - 1]?.year;
 const newest = indexableYears[0]?.year;
-const title = `${model.makeLabel} ${model.modelLabel} Towing Capacity by Year — All Generations`;
-const description = `Complete towing-capacity history for the ${model.makeLabel} ${model.modelLabel}: max tow, payload, GCWR, and hitch class for every model year ${oldest ?? ''}–${newest ?? ''}.`;
+const title = `${model.makeLabel} ${model.modelLabel} Towing Capacity by Year: All Generations`;
+const description = `Complete towing-capacity history for the ${model.makeLabel} ${model.modelLabel}: max tow, payload, GCWR, and hitch class for every model year ${oldest ?? ''}-${newest ?? ''}.`;
 const crumbs = [
   { name: 'Home', href: '/' },
   { name: model.makeLabel, href: `/${model.makeSlug}/` },

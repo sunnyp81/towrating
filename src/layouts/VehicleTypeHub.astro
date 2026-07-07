@@ -9,7 +9,7 @@ interface Props {
   vehicles: Array<{ makeSlug: string; modelSlug: string; year: number; bestTowLbs: number; modelLabel: string; makeLabel: string }>;
 }
 const { type, vehicles } = Astro.props;
-const title = `Best ${type.charAt(0).toUpperCase() + type.slice(1)}s for Towing — Capacity Comparison`;
+const title = `Best ${type.charAt(0).toUpperCase() + type.slice(1)}s for Towing: Capacity Comparison`;
 const description = `Compare ${type} towing capacities across every major US make. Sortable by max tow capacity, year, and trim.`;
 const crumbs = [{ name: 'Home', href: '/' }, { name: 'By Vehicle Type', href: '/tow-by-vehicle-type/' }, { name: `${type}s`, href: `/tow-by-vehicle-type/${type}/` }];
 const jsonLd = [breadcrumbList(crumbs), collectionPage({ name: title, description, url: `/tow-by-vehicle-type/${type}/` })];

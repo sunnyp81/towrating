@@ -5,21 +5,21 @@ const key = readdirSync(resolve('public')).find(f => /^[a-f0-9]{32}\.txt$/.test(
 if (!key) { console.error('No IndexNow key found in public/'); process.exit(1); }
 
 async function gatherUrls() {
-  const idx = await (await fetch('https://towrating.net/sitemap-index.xml')).text();
+  const idx = await (await fetch('https://towrating.org/sitemap-index.xml')).text();
   const sitemapUrls = [...idx.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
   const urls = [];
   for (const sm of sitemapUrls) {
     const xml = await (await fetch(sm)).text();
     urls.push(...[...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]));
   }
-  return urls.filter(u => u.includes('towrating.net'));
+  return urls.filter(u => u.includes('towrating.org'));
 }
 
 async function ping(target) {
   const r = await fetch(`https://api.indexnow.org/indexnow`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ host: 'towrating.net', key, keyLocation: `https://towrating.net/${key}.txt`, urlList: target }),
+    body: JSON.stringify({ host: 'towrating.org', key, keyLocation: `https://towrating.org/${key}.txt`, urlList: target }),
   });
   return r.status;
 }

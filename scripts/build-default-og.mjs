@@ -14,7 +14,7 @@ const html = {
       padding: '60px', fontFamily: 'sans-serif',
     },
     children: [
-      { type: 'div', props: { style: { fontSize: 36, color: '#f59e0b', fontWeight: 700 }, children: 'towrating.net' } },
+      { type: 'div', props: { style: { fontSize: 36, color: '#f59e0b', fontWeight: 700 }, children: 'towrating.org' } },
       { type: 'div', props: { style: { fontSize: 80, fontWeight: 700, lineHeight: 1.1, display: 'flex' }, children: 'Verified US towing capacities' } },
       { type: 'div', props: { style: { fontSize: 28, color: '#cbd5e1' }, children: 'Max tow · Payload · GCWR · Tongue weight · Hitch class' } },
     ],

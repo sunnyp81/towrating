@@ -2,7 +2,7 @@ import type { TowingSpecs } from './types.ts';
 
 export function lbsFromText(s: string | null | undefined): number | null {
   if (!s) return null;
-  // prefer "(N lb)" inside parens — kg often appears first
+  // prefer "(N lb)" inside parens, kg often appears first
   const paren = s.match(/\(([\d,]+)\s*(lb|lbs|pounds?)\b/i);
   if (paren) return parseInt(paren[1].replace(/,/g, ''), 10);
   const m = s.match(/([\d,]+)\s*(lb|lbs|pounds?)\b/i);

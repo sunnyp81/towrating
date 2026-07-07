@@ -3,7 +3,7 @@
 > Verified US vehicle towing capacities. Year/make/model/trim spec lookup with payload, GCWR, tongue weight, and hitch-class data sourced from manufacturer brochures and Wikipedia.
 
 ## Vehicles
-- [F-150 towing capacity](https://towrating.org/ford/f-150/): all years 2001–2026, all trims, full 5-spec
+- [F-150 towing capacity](https://towrating.org/ford/f-150/): all years 2001-2026, all trims, full 5-spec
 - [Silverado 1500](https://towrating.org/chevrolet/silverado-1500/)
 - [Ram 1500](https://towrating.org/ram/1500/)
 - [Tacoma](https://towrating.org/toyota/tacoma/)
