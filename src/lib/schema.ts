@@ -18,16 +18,6 @@ export function vehicleSchema(model: Model, year: Year, trim: Trim) {
   };
 }
 
-export function productSchema(model: Model, year: Year, trim: Trim, dealerUrl: string) {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'Product',
-    name: `${year.year} ${model.makeLabel} ${model.modelLabel} ${trim.trimLabel}`,
-    brand: { '@type': 'Brand', name: model.makeLabel },
-    offers: { '@type': 'Offer', url: dealerUrl, availability: 'https://schema.org/InStock' },
-  };
-}
-
 export function breadcrumbList(items: Array<{ name: string; href: string }>) {
   return {
     '@context': 'https://schema.org',

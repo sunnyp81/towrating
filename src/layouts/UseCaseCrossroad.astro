@@ -17,19 +17,21 @@ const weightHint = crossroad.trailer === 'travel-trailer' ? '5,000 and 9,000 lbs
   <article class="max-w-4xl mx-auto px-4 py-8">
     <BreadcrumbList items={crumbs} />
     <h1 class="font-display text-4xl font-bold text-brand-900 mb-4">{title}</h1>
-    <p class="text-lg text-slate-700 leading-relaxed mb-6">A typical {crossroad.trailerLabel} weighs between {weightHint} loaded. Below are the top {crossroad.classLabel} options that can pull this safely with margin to spare.</p>
+    <p class="text-lg text-slate-700 leading-relaxed mb-6">A typical {crossroad.trailerLabel} weighs between {weightHint} loaded. Below are the top {crossroad.classLabel} options that can pull this with headroom on paper, always confirm against your specific vehicle's ratings.</p>
     <h2 class="font-display text-2xl font-semibold mt-8 mb-4">Top vehicles for this combination</h2>
-    <table class="w-full text-sm">
-      <thead><tr class="bg-slate-100 text-left"><th class="p-3">Vehicle</th><th class="p-3">Year</th><th class="p-3">Max Tow</th></tr></thead>
-      <tbody>
-        {crossroad.vehicles.slice(0, 20).map(v => (
-          <tr class="border-t border-slate-200">
-            <td class="p-3 capitalize"><a href={`/${v.makeSlug}/${v.modelSlug}/${v.year}/`} class="text-brand-700 hover:underline">{v.makeSlug.replace(/-/g, ' ')} {v.modelSlug.replace(/-/g, ' ')}</a></td>
-            <td class="p-3">{v.year}</td>
-            <td class="p-3 font-semibold">{formatLbs(v.maxTowLbs)}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead><tr class="bg-slate-100 text-left"><th class="p-3">Vehicle</th><th class="p-3">Year</th><th class="p-3">Max Tow</th></tr></thead>
+        <tbody>
+          {crossroad.vehicles.slice(0, 20).map(v => (
+            <tr class="border-t border-slate-200">
+              <td class="p-3 capitalize"><a href={`/${v.makeSlug}/${v.modelSlug}/${v.year}/`} class="text-brand-700 hover:underline">{v.makeSlug.replace(/-/g, ' ')} {v.modelSlug.replace(/-/g, ' ')}</a></td>
+              <td class="p-3">{v.year}</td>
+              <td class="p-3 font-semibold">{formatLbs(v.maxTowLbs)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   </article>
 </Base>

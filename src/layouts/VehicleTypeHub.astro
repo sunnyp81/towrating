@@ -20,17 +20,19 @@ const topTow = vehicles.length ? Math.max(...vehicles.map(v => v.bestTowLbs)) : 
     <BreadcrumbList items={crumbs} />
     <h1 class="font-display text-4xl font-bold text-brand-900 mb-4">{title}</h1>
     <p class="text-lg text-slate-700 leading-relaxed mb-6">There are {vehicles.length} {type}s in our database with documented towing capacities. Top tow rating in this class: {formatLbs(topTow)}.</p>
-    <table class="w-full text-sm">
-      <thead><tr class="bg-slate-100 text-left"><th class="p-3">Vehicle</th><th class="p-3">Year</th><th class="p-3">Max Tow</th></tr></thead>
-      <tbody>
-        {vehicles.slice(0, 100).map(v => (
-          <tr class="border-t border-slate-200">
-            <td class="p-3"><a href={`/${v.makeSlug}/${v.modelSlug}/${v.year}/`} class="text-brand-700 hover:underline">{v.makeLabel} {v.modelLabel}</a></td>
-            <td class="p-3">{v.year}</td>
-            <td class="p-3 font-semibold">{formatLbs(v.bestTowLbs)}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead><tr class="bg-slate-100 text-left"><th class="p-3">Vehicle</th><th class="p-3">Year</th><th class="p-3">Max Tow</th></tr></thead>
+        <tbody>
+          {vehicles.slice(0, 100).map(v => (
+            <tr class="border-t border-slate-200">
+              <td class="p-3"><a href={`/${v.makeSlug}/${v.modelSlug}/${v.year}/`} class="text-brand-700 hover:underline">{v.makeLabel} {v.modelLabel}</a></td>
+              <td class="p-3">{v.year}</td>
+              <td class="p-3 font-semibold">{formatLbs(v.bestTowLbs)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   </article>
 </Base>

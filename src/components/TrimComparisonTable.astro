@@ -26,7 +26,7 @@ const { trims, highlightSlug, makeSlug, modelSlug, year } = Astro.props;
             <td class="p-3">{formatLbs(t.specs.payloadLbs)}</td>
             <td class="p-3">{formatLbs(t.specs.gcwrLbs)}</td>
             <td class="p-3">{formatLbs(t.specs.tongueWeightLbs)}</td>
-            <td class="p-3">{t.specs.hitchClass ?? ', '}</td>
+            <td class="p-3">{t.specs.hitchClass ?? 'N/A'}</td>
           </tr>
         ))}
       </tbody>

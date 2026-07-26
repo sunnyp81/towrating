@@ -53,6 +53,7 @@ const minTow = Math.min(...year.trims.map(t => t.specs.maxTowLbs ?? 0).filter(n 
     <h1 class="font-display text-4xl font-bold text-brand-900 mb-4">{title}</h1>
     <p class="text-lg text-slate-700 leading-relaxed mb-6">The {year.year} {model.makeLabel} {model.modelLabel} is rated to tow up to {formatLbs(year.bestTowLbs)} when properly equipped on its top {bestTrim.trimLabel} trim. Across all {year.trims.length} trims, towing capacity ranges from {formatLbs(minTow)} to {formatLbs(year.bestTowLbs)}.</p>
     <QuickAnswerBox specs={bestTrim.specs} />
+    <p class="text-xs text-slate-500 mt-2">Always confirm ratings against your owner's manual and the door-jamb sticker on your specific vehicle before towing.</p>
     <TrimComparisonTable trims={year.trims} makeSlug={model.makeSlug} modelSlug={model.modelSlug} year={year.year} />
     <AffiliateBox title={`Find a ${year.year} ${model.makeLabel} ${model.modelLabel} nearby`} description="Compare local listings, dealer prices, and inventory." href={carGurusUrl(year.year, model.makeLabel, model.modelLabel)} ctaLabel="Search local inventory" />
     <FAQSection qas={faqs} />

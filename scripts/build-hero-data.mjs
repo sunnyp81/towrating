@@ -1300,7 +1300,7 @@ const frontier = {
   make: 'Nissan',
   model: 'Frontier',
   vehicleClass: 'truck',
-  wikipediaUrl: 'https://en.wikipedia.org/wiki/Nissan_Navara',
+  wikipediaUrl: 'https://en.wikipedia.org/wiki/Nissan_Frontier',
   years: [
     Y(2015, [
       T('S 2.5L QR25DE I-4 4x2', 'RWD', '2.5L QR25DE I-4', 3727, 3500, 1410, 7800),
